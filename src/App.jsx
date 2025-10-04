@@ -14,6 +14,7 @@ import Footer from './components/Footer'
 import ItemDetails from './Pages/ItemDetails'
 import Login from './Pages/Login'
 import Signup from './Pages/signup'
+import MyItems from './Pages/Myitems'
 function App() {
   const [count, setCount] = useState(0)
 
@@ -31,6 +32,7 @@ function App() {
         <Route path="/item/:id" element={<ItemDetails />} />
         <Route path="/Login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
+        <Route path="/myitems" element={<MyItems />} />
       </Routes>
     </main>
     <Footer/>

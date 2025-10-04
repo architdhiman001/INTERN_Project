@@ -4,6 +4,7 @@ const cors = require('cors');
 const uploadFoundReport = require('./routes/uploadFoundReport');
 const uploadLostReport =require('./routes/uploadLostReport');
 const authRoutes = require('./routes/auth');
+const myItemsRoutes = require('./routes/myitems');
 const app = express();
 const path = require('path');
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
@@ -11,8 +12,8 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 // Middleware
 app.use(cors({
   origin: 'http://localhost:5173',
-  methods: ['GET', 'POST', 'OPTIONS'],
-  allowedHeaders: ['Content-Type'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'], // ✅ include Authorization
   credentials: true
 }));
 app.use(express.json());
@@ -22,6 +23,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/api/auth', authRoutes);
 app.use('/api', uploadFoundReport);
 app.use('/api', uploadLostReport);
+app.use('/api', myItemsRoutes);
 // Home route
 app.get('/', (req, res) => {
   res.send('Image Upload API is running');
@@ -62,6 +64,8 @@ app.get('/api/item/:id', async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 });
+
+
 
   
   
