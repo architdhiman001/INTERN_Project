@@ -90,7 +90,7 @@ const Home = () => {
                     <img
                       src={
                         item.imagePath
-                          ? `http://localhost:5050/${item.imagePath}`
+                          ? item.imagePath
                           : `/placeholder.svg?height=64&width=64`
                       }
                       alt={item.name}

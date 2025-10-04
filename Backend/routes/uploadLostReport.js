@@ -1,36 +1,43 @@
 const express = require('express');
 const multer = require('multer');
 const router = express.Router();
-const path = require('path');
-const verifyToken = require('../middleware/authMiddleware'); // JWT auth middleware
+const verifyToken = require('../middleware/authMiddleware'); 
+const { uploadToS3 } = require('../utils/s3upload'); // AWS S3 helper
+require('dotenv').config();
 
-// Configure Multer for file upload
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, 'uploads'); // make sure 'uploads' folder exists
-  },
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + path.extname(file.originalname));
+// ======================
+// Multer setup (in-memory storage for S3)
+// ======================
+const storage = multer.memoryStorage();
+const upload = multer({
+  storage,
+  limits: { fileSize: 5 * 1024 * 1024 }, // max 5MB
+  fileFilter: (req, file, cb) => {
+    if (file.mimetype.startsWith('image/')) cb(null, true);
+    else cb(new Error('Only image files are allowed!'), false);
   }
 });
 
-const upload = multer({ storage });
-
 // ======================
-// POST /api/uploadFormDatalost
+// POST /api/uploadLostReport
 // Protected route — upload lost item
 // ======================
 router.post('/uploadLostReport', verifyToken, upload.single('image'), async (req, res) => {
   try {
-    const imagePath = req.file ? req.file.path : null;
+    let imageUrl = null;
+    console.log('File received:', req.file);
+    // Upload to AWS S3 if image is provided
+    if (req.file) {
+      imageUrl = await uploadToS3(req.file);
+    }
 
     const entry = {
-      userId: req.user.id, // 🔑 track user
+      userId: req.user.id, // user from JWT
       name: req.body.name,
       email: req.body.email,
       description: req.body.description,
-      imagePath: imagePath,
-      type: req.body.type || 'lost', // default to lost
+      imagePath: imageUrl, // store S3 URL
+      type: req.body.type || 'lost', 
       phone: req.body.mobile,
       category: req.body.category,
       location: req.body.location,
@@ -40,10 +47,14 @@ router.post('/uploadLostReport', verifyToken, upload.single('image'), async (req
     const db = req.app.locals.db;
     const result = await db.collection('formEntries').insertOne(entry);
 
-    res.status(201).json({ message: 'Data saved', id: result.insertedId });
+    res.status(201).json({
+      message: 'Lost item uploaded successfully',
+      id: result.insertedId,
+      imageUrl
+    });
   } catch (err) {
-    console.error('Upload error:', err);
-    res.status(500).send('Upload and save failed');
+    console.error('❌ Upload error:', err);
+    res.status(500).json({ error: 'Upload and save failed' });
   }
 });
 
@@ -62,8 +73,8 @@ router.get('/lostitems', async (req, res) => {
 
     res.json(lostItems);
   } catch (err) {
-    console.error('Failed to fetch lost items:', err);
-    res.status(500).send('Server error');
+    console.error('❌ Failed to fetch lost items:', err);
+    res.status(500).json({ error: 'Server error' });
   }
 });
 
@@ -82,8 +93,8 @@ router.get('/items/user/lost', verifyToken, async (req, res) => {
 
     res.json(userLostItems);
   } catch (err) {
-    console.error('Failed to fetch user lost items:', err);
-    res.status(500).send('Server error');
+    console.error('❌ Failed to fetch user lost items:', err);
+    res.status(500).json({ error: 'Server error' });
   }
 });
 

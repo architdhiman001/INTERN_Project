@@ -59,7 +59,7 @@ const MyItems = () => {
             <div className="w-24 h-24 flex-shrink-0 rounded-md overflow-hidden bg-[#393E46]">
               {item.imagePath ? (
                 <img
-                  src={`http://localhost:5050/${item.imagePath}`}
+                  src={item.imagePath}
                   alt={item.name}
                   className="w-full h-full object-cover"
                 />

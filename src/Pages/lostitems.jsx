@@ -196,7 +196,7 @@ const Lostitems = () => {
                   </div>
                   <div className="mb-3">
                     <img
-                      src={`http://localhost:5050/${item.imagePath}`}
+                      src={item.imagePath}
                       alt={item.name}
                       className="h-32 w-full object-cover rounded-md border border-[#DFD0B8]"
                     />

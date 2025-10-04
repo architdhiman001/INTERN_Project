@@ -8,6 +8,7 @@ const myItemsRoutes = require('./routes/myitems');
 const app = express();
 const path = require('path');
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+require('dotenv').config();
 
 // Middleware
 app.use(cors({
