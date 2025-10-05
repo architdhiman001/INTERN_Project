@@ -28,6 +28,7 @@ const ReportFound = () => {
   // ✅ Submit the form data to backend
   const handleFormSubmit = async () => {
     const token = localStorage.getItem("token"); // 🔒 Get logged-in user token
+    console.log("🔹 Token being sent:", token);
     if (!token) {
       alert("You must be logged in to submit a report.");
       return;

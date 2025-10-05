@@ -2,7 +2,7 @@ const express = require('express');
 const multer = require('multer');
 const router = express.Router();
 const verifyToken = require('../middleware/authMiddleware'); 
-const { uploadToS3 } = require('../utils/s3upload'); // ✅ AWS S3 helper
+const { uploadToS3 } = require('../utils/s3upload');
 require('dotenv').config();
 
 // ======================
@@ -11,7 +11,7 @@ require('dotenv').config();
 const storage = multer.memoryStorage();
 const upload = multer({
   storage,
-  limits: { fileSize: 5 * 1024 * 1024 }, // max 5MB
+  limits: { fileSize: 5 * 1024 * 1024 },
   fileFilter: (req, file, cb) => {
     if (file.mimetype.startsWith('image/')) cb(null, true);
     else cb(new Error('Only image files are allowed!'), false);
@@ -25,24 +25,27 @@ const upload = multer({
 router.post('/uploadFoundReport', verifyToken, upload.single('image'), async (req, res) => {
   try {
     let imageUrl = null;
-    console.log('File received:', req.file);
-
-    // Upload to AWS S3 if image is provided
     if (req.file) {
       imageUrl = await uploadToS3(req.file);
     }
+
+    const createdAt = new Date();
+    const baseUrgency = req.body.type === 'lost' ? 10 : 5;
+    const hoursSinceReported = 0; // just created
+    const urgencyScore = Math.max(baseUrgency - Math.floor(hoursSinceReported / 24), 1);
 
     const entry = {
       userId: req.user.id,
       name: req.body.name,
       email: req.body.email,
       description: req.body.description,
-      imagePath: imageUrl, // ✅ store S3 URL
-      type: req.body.type || 'found', 
+      imagePath: imageUrl,
+      type: req.body.type || 'found',
       phone: req.body.mobile,
       category: req.body.category,
       location: req.body.location,
-      createdAt: new Date()
+      createdAt,
+      urgencyScore
     };
 
     const db = req.app.locals.db;
@@ -58,39 +61,16 @@ router.post('/uploadFoundReport', verifyToken, upload.single('image'), async (re
     res.status(500).json({ error: 'Upload and save failed' });
   }
 });
-
-// ======================
-// GET /api/items/user
-// Fetch items uploaded by logged-in user
-// ======================
-router.get('/items/user', verifyToken, async (req, res) => {
-  try {
-    const db = req.app.locals.db;
-    const userItems = await db
-      .collection('formEntries')
-      .find({ userId: req.user.id })
-      .sort({ createdAt: -1 })
-      .toArray();
-
-    res.json(userItems);
-  } catch (err) {
-    console.error('❌ Failed to fetch user items:', err);
-    res.status(500).json({ error: 'Server error' });
-  }
-});
-
-// ======================
-// GET /api/founditems
-// Fetch all found items
-// ======================
 router.get('/founditems', async (req, res) => {
   try {
     const db = req.app.locals.db;
-    const foundItems = await db
-      .collection('formEntries')
-      .find({ type: 'found' })
-      .sort({ createdAt: -1 })
-      .toArray();
+    
+    // Fetch items of type 'found'
+    let foundItems = await db.collection('formEntries').find({ type: 'found' }).toArray();
+
+    // Optional: You can compute urgencyScore for found items if you want
+    // Example: sorting by recent reports
+    foundItems.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
     res.json(foundItems);
   } catch (err) {
@@ -100,33 +80,22 @@ router.get('/founditems', async (req, res) => {
 });
 
 // ======================
-// GET /api/lostitems
-// Fetch all lost items
-// ======================
-router.get('/lostitems', async (req, res) => {
-  try {
-    const db = req.app.locals.db;
-    const lostItems = await db
-      .collection('formEntries')
-      .find({ type: 'lost' })
-      .sort({ createdAt: -1 })
-      .toArray();
-
-    res.json(lostItems);
-  } catch (err) {
-    console.error('❌ Failed to fetch lost items:', err);
-    res.status(500).json({ error: 'Server error' });
-  }
-});
-
-// ======================
 // GET /api/allitems
-// Fetch all items
+// Fetch all items sorted by urgency
 // ======================
 router.get('/allitems', async (req, res) => {
   try {
     const db = req.app.locals.db;
-    const allItems = await db.collection('formEntries').find({}).sort({ createdAt: -1 }).toArray();
+    let allItems = await db.collection('formEntries').find({}).toArray();
+
+    allItems = allItems.map(item => {
+      const baseUrgency = item.type === 'lost' ? 10 : 5;
+      const hoursSinceReported = (Date.now() - new Date(item.createdAt)) / (1000 * 60 * 60);
+      item.urgencyScore = Math.max(baseUrgency - Math.floor(hoursSinceReported / 24), 1);
+      return item;
+    });
+
+    allItems.sort((a, b) => b.urgencyScore - a.urgencyScore);
     res.json(allItems);
   } catch (err) {
     console.error('❌ Failed to fetch all items:', err);

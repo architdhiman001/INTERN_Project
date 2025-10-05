@@ -1,8 +1,11 @@
 const jwt = require('jsonwebtoken');
-const JWT_SECRET = "your_secret_key_here"; // ⚠️ Consider moving this to an environment variable
+require('dotenv').config(); // Load environment variables
+
+const JWT_SECRET = process.env.JWT_SECRET;
 
 function authMiddleware(req, res, next) {
-  // Get token from Authorization header
+  //console.log("🔹 Incoming headers:", req.headers);
+
   const authHeader = req.headers['authorization'];
   const token = authHeader && authHeader.split(' ')[1];
 
@@ -12,14 +15,11 @@ function authMiddleware(req, res, next) {
 
   try {
     const decoded = jwt.verify(token, JWT_SECRET);
-    // Attach only necessary user info to req.user
-    req.user = {
-      id: decoded.id,
-      name: decoded.name,
-      email: decoded.email // optional
-    };
+    // Only store id in req.user; fetch other details from DB if needed
+    req.user = { id: decoded.id };
     next();
   } catch (err) {
+    console.error("JWT verification failed:", err.message);
     return res.status(403).json({ error: "Invalid or expired token." });
   }
 }

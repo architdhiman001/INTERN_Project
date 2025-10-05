@@ -5,22 +5,25 @@ import { useNavigate } from "react-router";
 import { MdLocationOn, MdAccessTime } from "react-icons/md";
 
 const Home = () => {
-  const [items, setitems] = useState([]);
+  const [items, setItems] = useState([]);
   const navigate = useNavigate();
 
-  const getitems = async () => {
+  const getItems = async () => {
     try {
       const res = await fetch("http://localhost:5050/api/allitems");
       const data = await res.json();
-      setitems(data);
-      console.log(data);
+
+      // Sort by urgencyScore descending
+      const sorted = data.sort((a, b) => b.urgencyScore - a.urgencyScore);
+      setItems(sorted);
+      console.log(sorted);
     } catch (error) {
       console.error("Error fetching items:", error);
     }
   };
 
   useEffect(() => {
-    getitems();
+    getItems();
   }, []);
 
   const formatDistanceToNow = (date) => {
@@ -31,6 +34,12 @@ const Home = () => {
     if (diffHours < 24) return `${diffHours} hours ago`;
     const diffDays = Math.floor(diffHours / 24);
     return `${diffDays} days ago`;
+  };
+
+  const getUrgencyColor = (score) => {
+    if (score >= 8) return "bg-red-500 text-white"; // High urgency
+    if (score >= 5) return "bg-yellow-400 text-black"; // Medium urgency
+    return "bg-green-400 text-black"; // Low urgency
   };
 
   return (
@@ -76,7 +85,9 @@ const Home = () => {
           {/* List Section */}
           <div className="flex flex-col mt-10">
             <h2 className="text-[#DFD0B8] text-left text-3xl font-bold">Recently Reported Items</h2>
-            <p className="text-[#DFD0B8] text-left text-sm mb-4">The latest items reported on campus</p>
+            <p className="text-[#DFD0B8] text-left text-sm mb-4">
+              The latest items reported on campus (sorted by urgency)
+            </p>
 
             <div className="flex flex-col gap-4">
               {items.map((item) => (
@@ -88,11 +99,7 @@ const Home = () => {
                   {/* Image */}
                   <div className="flex-shrink-0 w-20 h-20 overflow-hidden rounded-md bg-[#393E46]">
                     <img
-                      src={
-                        item.imagePath
-                          ? item.imagePath
-                          : `/placeholder.svg?height=64&width=64`
-                      }
+                      src={item.imagePath ? item.imagePath : `/placeholder.svg?height=64&width=64`}
                       alt={item.name}
                       className="w-full h-full object-cover rounded-md transition-transform duration-300 hover:scale-105"
                     />
@@ -111,6 +118,10 @@ const Home = () => {
                       >
                         {item.type === "lost" ? "Lost" : "Found"}
                       </span>
+                      {/* Urgency badge */}
+                      <span className={`px-2 py-1 text-xs font-semibold rounded-full ${getUrgencyColor(item.urgencyScore)}`}>
+                        ⚡ Urgency: {item.urgencyScore}
+                      </span>
                     </div>
 
                     <p className="text-sm text-[#B8B8B8] mt-2 line-clamp-2">{item.description}</p>
@@ -119,10 +130,7 @@ const Home = () => {
                       <div className="flex items-center gap-1">
                         <MdLocationOn /> {item.location}
                       </div>
-                      <div
-                        className="flex items-center gap-1"
-                        title={new Date(item.createdAt).toLocaleString()}
-                      >
+                      <div className="flex items-center gap-1" title={new Date(item.createdAt).toLocaleString()}>
                         <MdAccessTime /> {formatDistanceToNow(new Date(item.createdAt))}
                       </div>
                       <div className={item.type === "lost" ? "text-orange-400" : "text-green-400"}>
