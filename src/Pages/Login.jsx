@@ -6,6 +6,9 @@ const Login = () => {
   const [message, setMessage] = useState("");
   const navigate = useNavigate();
 
+  // Use your Render backend URL
+  const BACKEND_URL = "https://intern-project-1-fose.onrender.com";
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -15,7 +18,11 @@ const Login = () => {
     setMessage("");
 
     try {
+<<<<<<< HEAD
       const res = await fetch("https://intern-project-1-fose.onrender.com/api/auth/login", {
+=======
+      const res = await fetch(`${BACKEND_URL}/api/auth/login`, {
+>>>>>>> 1456f4e (Updated cors for the render)
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
@@ -32,13 +39,16 @@ const Login = () => {
       }
     } catch (error) {
       setMessage("Server error");
+      console.error("Login fetch error:", error);
     }
   };
 
   return (
     <div className="bg-[#393E46] min-h-screen flex justify-center items-center">
       <div className="bg-[#222831] border border-[#DFD0B8] rounded-lg p-8 w-[400px] shadow-lg">
-        <h2 className="text-[#DFD0B8] text-3xl font-bold mb-6 text-center">Welcome Back</h2>
+        <h2 className="text-[#DFD0B8] text-3xl font-bold mb-6 text-center">
+          Welcome Back
+        </h2>
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <input
             type="email"

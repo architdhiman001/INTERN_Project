@@ -6,6 +6,8 @@ const Signup = () => {
   const [message, setMessage] = useState("");
   const navigate = useNavigate();
 
+  const BACKEND_URL = "https://intern-project-1-fose.onrender.com"; // Render backend
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -15,7 +17,11 @@ const Signup = () => {
     setMessage("");
 
     try {
+<<<<<<< HEAD
       const res = await fetch("https://intern-project-1-fose.onrender.com/api/auth/signup", {
+=======
+      const res = await fetch(`${BACKEND_URL}/api/auth/signup`, {
+>>>>>>> 1456f4e (Updated cors for the render)
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
@@ -58,7 +64,7 @@ const Signup = () => {
             type="password"
             name="password"
             placeholder="Password"
-            className="p-3 rounded-md bg-[#393E46] text-[#DFD0B8] border border-[#DFD0B8] placeholder-[#B8B8B8]"
+            className="p-3 bg-[#393E46] text-[#DFD0B8] border border-[#DFD0B8] placeholder-[#B8B8B8] rounded-md"
             onChange={handleChange}
             required
           />

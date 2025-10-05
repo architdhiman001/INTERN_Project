@@ -13,13 +13,25 @@ const myItemsRoutes = require('./routes/myitems');
 
 const app = express();
 
-// Middleware
+// CORS middleware
+const allowedOrigins = [
+  'http://localhost:5173', // local dev
+  'https://intern-project-frontend-l415.onrender.com' // frontend Render URL
+];
+
 app.use(cors({
-  origin: 'http://localhost:5173',
+  origin: function(origin, callback) {
+    if (!origin) return callback(null, true); // allow non-browser requests
+    if (allowedOrigins.indexOf(origin) === -1) {
+      return callback(new Error('CORS policy does not allow access from this origin'), false);
+    }
+    return callback(null, true);
+  },
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true
 }));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -37,7 +49,6 @@ const dbName = 'Reportfound';
 
 async function startServer() {
   try {
-    // Use the modern connection method (no custom TLS options)
     const client = new MongoClient(mongoUrl);
     await client.connect();
 
@@ -46,7 +57,7 @@ async function startServer() {
     const db = client.db(dbName);
     app.locals.db = db;
 
-    // Register routes only after DB is ready
+    // Register routes
     app.use('/api/auth', authRoutes);
     app.use('/api', uploadFoundReport);
     app.use('/api', uploadLostReport);
@@ -66,7 +77,6 @@ async function startServer() {
       }
     });
 
-    // Start server
     const PORT = process.env.PORT || 5050;
     app.listen(PORT, () => {
       console.log(`🚀 Server running at http://localhost:${PORT}`);

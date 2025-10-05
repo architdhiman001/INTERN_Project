@@ -6,10 +6,18 @@ const ItemDetails = () => {
   const navigate = useNavigate();
   const [item, setItem] = useState(null);
 
+  // Backend URL
+  const BACKEND_URL = "https://intern-project-1-fose.onrender.com";
+
   useEffect(() => {
     const fetchItem = async () => {
       try {
+<<<<<<< HEAD
         const res = await fetch(`https://intern-project-1-fose.onrender.com/api/item/${id}`);
+=======
+        const res = await fetch(`${BACKEND_URL}/api/item/${id}`);
+        if (!res.ok) throw new Error("Failed to fetch item details");
+>>>>>>> 1456f4e (Updated cors for the render)
         const data = await res.json();
         setItem(data);
       } catch (error) {
@@ -79,24 +87,13 @@ const ItemDetails = () => {
 
                 <div className="flex flex-col gap-3 text-sm text-[#A0A0A0] mt-4">
                   <div className="flex items-center gap-2">
-                    📍{" "}
-                    <span>
-                      <strong>Location:</strong> {item.location}
-                    </span>
+                    📍 <span><strong>Location:</strong> {item.location}</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    📞{" "}
-                    <span>
-                      <strong>Mobile:</strong>{" "}
-                      {item.phone || "Not provided"}
-                    </span>
+                    📞 <span><strong>Mobile:</strong> {item.phone || "Not provided"}</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    📧{" "}
-                    <span>
-                      <strong>Email:</strong>{" "}
-                      {item.email || "Not provided"}
-                    </span>
+                    📧 <span><strong>Email:</strong> {item.email || "Not provided"}</span>
                   </div>
                   <div className="flex items-center gap-2">
                     {item.type === "lost" ? (

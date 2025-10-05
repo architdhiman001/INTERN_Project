@@ -4,6 +4,7 @@ import axios from "axios";
 
 const ReportFound = () => {
   const navigate = useNavigate();
+  const BACKEND_URL = "https://intern-project-1-fose.onrender.com"; // Render backend
 
   const categories = ["Accessories", "Bag", "Electronics", "Clothing", "Stationery"];
   const campusLocations = ["Library", "Cafeteria", "Lecture Hall 3", "Parking Lot", "Hostel"];
@@ -25,10 +26,8 @@ const ReportFound = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // ✅ Submit the form data to backend
   const handleFormSubmit = async () => {
-    const token = localStorage.getItem("token"); // 🔒 Get logged-in user token
-    console.log("🔹 Token being sent:", token);
+    const token = localStorage.getItem("token");
     if (!token) {
       alert("You must be logged in to submit a report.");
       return;
@@ -45,10 +44,14 @@ const ReportFound = () => {
     uploadFormData.append("type", "found");
 
     try {
+<<<<<<< HEAD
       await axios.post("https://intern-project-1-fose.onrender.com/api/uploadFoundReport", uploadFormData, {
+=======
+      await axios.post(`${BACKEND_URL}/api/uploadFoundReport`, uploadFormData, {
+>>>>>>> 1456f4e (Updated cors for the render)
         headers: {
           "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${token}`, // ✅ Attach token for user tracking
+          Authorization: `Bearer ${token}`,
         },
       });
     } catch (err) {

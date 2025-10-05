@@ -1,12 +1,13 @@
 import React from "react";
 import { Link, useNavigate } from "react-router";
 import { useState, useEffect } from "react";
-import { Navigate } from "react-router";
+
 const Lostitems = () => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedLocation, setSelectedLocation] = useState("");
+<<<<<<< HEAD
   const categories = [
     "Accessories",
     "Bag",
@@ -27,91 +28,36 @@ const Lostitems = () => {
     let item = await req.json();
     setitems(item);
     console.log(item);
+=======
+
+  const categories = ["Accessories", "Bag", "Electronics", "Clothing", "Stationery"];
+  const locations = ["Library", "Cafeteria", "Lecture Hall 3", "Parking Lot", "Hostel"];
+
+  const [items, setItems] = useState([]);
+  const BACKEND_URL = "https://intern-project-1-fose.onrender.com"; // Your deployed backend
+
+  const getItems = async () => {
+    try {
+      const req = await fetch(`${BACKEND_URL}/api/lostitems`);
+      const item = await req.json();
+      setItems(item);
+      console.log(item);
+    } catch (error) {
+      console.error("Error fetching lost items:", error);
+    }
+>>>>>>> 1456f4e (Updated cors for the render)
   };
+
   useEffect(() => {
-    getitems();
+    getItems();
   }, []);
+
   const filteredItems = items.filter(item => {
     const matchesSearch = item.name.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesCategory = selectedCategory ? item.category === selectedCategory : true;
     const matchesLocation = selectedLocation ? item.location === selectedLocation : true;
     return matchesSearch && matchesCategory && matchesLocation;
   });
-
-  // const items = [
-  //   {
-  //     id: 1,
-  //     name: "Water Bottle",
-  //     category: "Accessories",
-  //     description: "Black steel water bottle with college logo.",
-  //     location: "Library",
-  //     date: "2025-06-14T10:30:00",
-  //     image: "https://via.placeholder.com/100",
-  //   },
-  //   {
-  //     id: 2,
-  //     name: "Backpack",
-  //     category: "Bag",
-  //     description: "Blue Skybag backpack found near cafeteria.",
-  //     location: "Cafeteria",
-  //     date: "2025-06-13T15:00:00",
-  //     image: "https://via.placeholder.com/100",
-  //   },
-  //   {
-  //     id: 3,
-  //     name: "Calculator",
-  //     category: "Electronics",
-  //     description: "Casio scientific calculator.",
-  //     location: "Lecture Hall 3",
-  //     date: "2025-06-12T09:00:00",
-  //     image: "https://via.placeholder.com/100",
-  //   },
-  //   {
-  //     id: 4,
-  //     name: "Sweatshirt",
-  //     category: "Clothing",
-  //     description: "Grey hoodie with front pocket and college logo.",
-  //     location: "Hostel",
-  //     date: "2025-06-11T17:45:00",
-  //     image: "https://via.placeholder.com/100",
-  //   },
-  //   {
-  //     id: 5,
-  //     name: "Notebook",
-  //     category: "Stationery",
-  //     description: "Spiral-bound notebook with graph papers.",
-  //     location: "Lecture Hall 3",
-  //     date: "2025-06-10T08:20:00",
-  //     image: "https://via.placeholder.com/100",
-  //   },
-  //   {
-  //     id: 6,
-  //     name: "Laptop Charger",
-  //     category: "Electronics",
-  //     description: "Dell 65W charger left in the library reading room.",
-  //     location: "Library",
-  //     date: "2025-06-09T13:15:00",
-  //     image: "https://via.placeholder.com/100",
-  //   },
-  //   {
-  //     id: 7,
-  //     name: "Umbrella",
-  //     category: "Accessories",
-  //     description: "Black folding umbrella with silver handle.",
-  //     location: "Parking Lot",
-  //     date: "2025-06-08T11:10:00",
-  //     image: "https://via.placeholder.com/100",
-  //   },
-  //   {
-  //     id: 8,
-  //     name: "Bluetooth Earphones",
-  //     category: "Electronics",
-  //     description: "Noise-cancelling Sony earphones in black case.",
-  //     location: "Cafeteria",
-  //     date: "2025-06-07T14:00:00",
-  //     image: "https://via.placeholder.com/100",
-  //   },
-  // ];
 
   return (
     <div className="bg-[#393E46] min-h-screen text-[#DFD0B8] p-6 pt-30">
@@ -154,21 +100,18 @@ const Lostitems = () => {
             >
               <option value="">Filter by Category</option>
               {categories.map((category, idx) => (
-                <option key={idx} value={category}>
-                  {category}
-                </option>
+                <option key={idx} value={category}>{category}</option>
               ))}
             </select>
 
-            <select 
-            value={selectedLocation}
-            onChange={(e) => setSelectedLocation(e.target.value)}
-            className="py-2 rounded-md w-full text-[#b6ad9e] border border-[#DFD0B8] focus:outline-none">
+            <select
+              value={selectedLocation}
+              onChange={(e) => setSelectedLocation(e.target.value)}
+              className="py-2 rounded-md w-full text-[#b6ad9e] border border-[#DFD0B8] focus:outline-none"
+            >
               <option value="">Filter by Location</option>
               {locations.map((location, idx) => (
-                <option key={idx} value={location}>
-                  {location}
-                </option>
+                <option key={idx} value={location}>{location}</option>
               ))}
             </select>
           </div>
@@ -176,38 +119,37 @@ const Lostitems = () => {
 
         {/* Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredItems &&
-            filteredItems.map((item) => (
-              <div
-                key={item._id}
-                onClick={() => navigate(`/item/${item._id}`)}
-                className="bg-[#222831] border border-[#DFD0B8] rounded-lg overflow-hidden shadow hover:bg-[#393E46] transition-colors"
-              >
-                <div className="flex flex-col p-4">
-                  <div className="flex justify-between items-center mb-2">
-                    <h3 className="text-xl font-semibold">{item.name}</h3>
-                    <span className="bg-orange-400 text-[#393E46] px-3 py-1 text-xs rounded-full">
-                      Lost
-                    </span>
-                  </div>
-                  <div className="flex items-center text-sm mb-2">
-                    <span className="text-[#DFD0B8] mr-2">📍</span>
-                    {item.location}
-                  </div>
-                  <div className="mb-3">
-                    <img
-                      src={item.imagePath}
-                      alt={item.name}
-                      className="h-32 w-full object-cover rounded-md border border-[#DFD0B8]"
-                    />
-                  </div>
-                  <p className="text-sm">{item.description}</p>
-                  <div className="mt-2 text-xs text-gray-400">
-                    Reported on: {new Date(item.createdAt).toLocaleDateString()}
-                  </div>
+          {filteredItems && filteredItems.map((item) => (
+            <div
+              key={item._id}
+              onClick={() => navigate(`/item/${item._id}`)}
+              className="bg-[#222831] border border-[#DFD0B8] rounded-lg overflow-hidden shadow hover:bg-[#393E46] transition-colors"
+            >
+              <div className="flex flex-col p-4">
+                <div className="flex justify-between items-center mb-2">
+                  <h3 className="text-xl font-semibold">{item.name}</h3>
+                  <span className="bg-orange-400 text-[#393E46] px-3 py-1 text-xs rounded-full">
+                    Lost
+                  </span>
+                </div>
+                <div className="flex items-center text-sm mb-2">
+                  <span className="text-[#DFD0B8] mr-2">📍</span>
+                  {item.location}
+                </div>
+                <div className="mb-3">
+                  <img
+                    src={item.imagePath}
+                    alt={item.name}
+                    className="h-32 w-full object-cover rounded-md border border-[#DFD0B8]"
+                  />
+                </div>
+                <p className="text-sm">{item.description}</p>
+                <div className="mt-2 text-xs text-gray-400">
+                  Reported on: {new Date(item.createdAt).toLocaleDateString()}
                 </div>
               </div>
-            ))}
+            </div>
+          ))}
         </div>
       </div>
     </div>

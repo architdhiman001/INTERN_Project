@@ -1,22 +1,29 @@
 import React from "react";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router";
 import { MdLocationOn, MdAccessTime } from "react-icons/md";
 
 const Home = () => {
   const [items, setItems] = useState([]);
   const navigate = useNavigate();
 
+  // Use your Render backend URL
+  const BACKEND_URL = "https://intern-project-1-fose.onrender.com";
+
   const getItems = async () => {
     try {
+<<<<<<< HEAD
       const res = await fetch("https://intern-project-1-fose.onrender.com/api/allitems");
+=======
+      const res = await fetch(`${BACKEND_URL}/api/allitems`);
+      if (!res.ok) throw new Error("Failed to fetch items");
+>>>>>>> 1456f4e (Updated cors for the render)
       const data = await res.json();
 
       // Sort by urgencyScore descending
       const sorted = data.sort((a, b) => b.urgencyScore - a.urgencyScore);
       setItems(sorted);
-      console.log(sorted);
+      console.log("Fetched items:", sorted);
     } catch (error) {
       console.error("Error fetching items:", error);
     }
@@ -99,7 +106,7 @@ const Home = () => {
                   {/* Image */}
                   <div className="flex-shrink-0 w-20 h-20 overflow-hidden rounded-md bg-[#393E46]">
                     <img
-                      src={item.imagePath ? item.imagePath : `/placeholder.svg?height=64&width=64`}
+                      src={item.imagePath ? item.imagePath : "/placeholder.svg"}
                       alt={item.name}
                       className="w-full h-full object-cover rounded-md transition-transform duration-300 hover:scale-105"
                     />

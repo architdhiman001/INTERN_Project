@@ -4,6 +4,7 @@ import axios from "axios";
 
 const ReportLost = () => {
   const navigate = useNavigate();
+  const BACKEND_URL = "https://intern-project-1-fose.onrender.com"; // Render backend
 
   const categories = ["Accessories", "Bag", "Electronics", "Clothing", "Stationery"];
   const campusLocations = ["Library", "Cafeteria", "Lecture Hall 3", "Parking Lot", "Hostel"];
@@ -25,9 +26,8 @@ const ReportLost = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // ✅ Submit form data to backend
   const handleFormSubmit = async () => {
-    const token = localStorage.getItem("token"); // 🔒 get JWT
+    const token = localStorage.getItem("token");
     if (!token) {
       alert("You must be logged in to submit a report.");
       return;
@@ -44,10 +44,14 @@ const ReportLost = () => {
     uploadFormData.append("type", "lost");
 
     try {
+<<<<<<< HEAD
       await axios.post("https://intern-project-1-fose.onrender.com/api/uploadLostReport", uploadFormData, {
+=======
+      await axios.post(`${BACKEND_URL}/api/uploadLostReport`, uploadFormData, {
+>>>>>>> 1456f4e (Updated cors for the render)
         headers: {
           "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${token}`, // ✅ attach token for tracking
+          Authorization: `Bearer ${token}`,
         },
       });
     } catch (err) {
@@ -71,7 +75,7 @@ const ReportLost = () => {
       setErrors(newErrors);
     } else {
       await handleFormSubmit();
-      navigate("/lostitems"); // Redirect after submission
+      navigate("/lostitems");
     }
   };
 
@@ -81,7 +85,6 @@ const ReportLost = () => {
         <h1 className="text-2xl font-bold mb-6 text-[#DFD0B8]">Report a Lost Item</h1>
 
         <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Item Name */}
           <div>
             <label>Item Name *</label>
             <input
@@ -94,7 +97,6 @@ const ReportLost = () => {
             {errors.name && <p className="text-red-500">{errors.name}</p>}
           </div>
 
-          {/* Description */}
           <div>
             <label>Description *</label>
             <textarea
@@ -107,7 +109,6 @@ const ReportLost = () => {
             {errors.description && <p className="text-red-500">{errors.description}</p>}
           </div>
 
-          {/* Category & Location */}
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label>Category *</label>
@@ -142,7 +143,6 @@ const ReportLost = () => {
             </div>
           </div>
 
-          {/* Contact Info */}
           <div>
             <label>Your Name *</label>
             <input
