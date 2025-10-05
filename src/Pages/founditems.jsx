@@ -13,7 +13,7 @@ const Founditems = () => {
   const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedLocation, setSelectedLocation] = useState("");
   const getitems= async ()=>{
-    let req = await fetch("http://localhost:5050/api/founditems");
+    let req = await fetch("https://intern-project-1-fose.onrender.com/api/founditems");
     let item = await req.json();
     setitems(item);
     console.log(item);
