@@ -31,7 +31,7 @@ app.get('/', (req, res) => {
 });
 
 // MongoDB Connection
-const mongoUrl = 'mongodb://localhost:27017';
+const mongoUrl = process.env.MONGO_URI;
 const dbName = 'Reportfound'; 
 
 MongoClient.connect(mongoUrl, { useUnifiedTopology: true })
