@@ -44,7 +44,7 @@ const ReportLost = () => {
     uploadFormData.append("type", "lost");
 
     try {
-      await axios.post("http://localhost:5050/api/uploadLostReport", uploadFormData, {
+      await axios.post("https://intern-project-1-fose.onrender.com/api/uploadLostReport", uploadFormData, {
         headers: {
           "Content-Type": "multipart/form-data",
           Authorization: `Bearer ${token}`, // ✅ attach token for tracking
