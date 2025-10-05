@@ -7,28 +7,6 @@ const Lostitems = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedLocation, setSelectedLocation] = useState("");
-<<<<<<< HEAD
-  const categories = [
-    "Accessories",
-    "Bag",
-    "Electronics",
-    "Clothing",
-    "Stationery",
-  ];
-  const locations = [
-    "Library",
-    "Cafeteria",
-    "Lecture Hall 3",
-    "Parking Lot",
-    "Hostel",
-  ];
-  const [items, setitems] = useState([]);
-  const getitems = async () => {
-    let req = await fetch("https://intern-project-1-fose.onrender.com/api/lostitems");
-    let item = await req.json();
-    setitems(item);
-    console.log(item);
-=======
 
   const categories = ["Accessories", "Bag", "Electronics", "Clothing", "Stationery"];
   const locations = ["Library", "Cafeteria", "Lecture Hall 3", "Parking Lot", "Hostel"];
@@ -45,7 +23,6 @@ const Lostitems = () => {
     } catch (error) {
       console.error("Error fetching lost items:", error);
     }
->>>>>>> 1456f4e (Updated cors for the render)
   };
 
   useEffect(() => {

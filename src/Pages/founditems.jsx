@@ -10,14 +10,6 @@ const Founditems = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedLocation, setSelectedLocation] = useState("");
-<<<<<<< HEAD
-  const getitems= async ()=>{
-    let req = await fetch("https://intern-project-1-fose.onrender.com/api/founditems");
-    let item = await req.json();
-    setitems(item);
-    console.log(item);
-  }
-=======
 
   // Change this to your Render backend URL
   const BACKEND_URL = "https://intern-project-1-fose.onrender.com";
@@ -34,7 +26,6 @@ const Founditems = () => {
     }
   };
 
->>>>>>> 1456f4e (Updated cors for the render)
   useEffect(() => {
     getItems();
   }, []);

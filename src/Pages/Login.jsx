@@ -18,11 +18,7 @@ const Login = () => {
     setMessage("");
 
     try {
-<<<<<<< HEAD
-      const res = await fetch("https://intern-project-1-fose.onrender.com/api/auth/login", {
-=======
       const res = await fetch(`${BACKEND_URL}/api/auth/login`, {
->>>>>>> 1456f4e (Updated cors for the render)
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),

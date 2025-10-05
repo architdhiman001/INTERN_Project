@@ -12,12 +12,8 @@ const ItemDetails = () => {
   useEffect(() => {
     const fetchItem = async () => {
       try {
-<<<<<<< HEAD
-        const res = await fetch(`https://intern-project-1-fose.onrender.com/api/item/${id}`);
-=======
         const res = await fetch(`${BACKEND_URL}/api/item/${id}`);
         if (!res.ok) throw new Error("Failed to fetch item details");
->>>>>>> 1456f4e (Updated cors for the render)
         const data = await res.json();
         setItem(data);
       } catch (error) {

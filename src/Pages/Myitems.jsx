@@ -9,11 +9,7 @@ const MyItems = () => {
 
   const fetchMyItems = async () => {
     try {
-<<<<<<< HEAD
-      const res = await axios.get("https://intern-project-1-fose.onrender.com/api/myitems", {
-=======
       const res = await axios.get(`${BACKEND_URL}/api/myitems`, {
->>>>>>> 1456f4e (Updated cors for the render)
         headers: { Authorization: `Bearer ${token}` },
       });
       setMyItems(res.data);
@@ -27,11 +23,7 @@ const MyItems = () => {
     if (!confirmDelete) return;
 
     try {
-<<<<<<< HEAD
-      await axios.delete(`https://intern-project-1-fose.onrender.com/api/item/${id}`, {
-=======
       await axios.delete(`${BACKEND_URL}/api/item/${id}`, {
->>>>>>> 1456f4e (Updated cors for the render)
         headers: { Authorization: `Bearer ${token}` },
       });
       setMyItems(myItems.filter((item) => item._id !== id));

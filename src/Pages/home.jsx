@@ -12,12 +12,8 @@ const Home = () => {
 
   const getItems = async () => {
     try {
-<<<<<<< HEAD
-      const res = await fetch("https://intern-project-1-fose.onrender.com/api/allitems");
-=======
       const res = await fetch(`${BACKEND_URL}/api/allitems`);
       if (!res.ok) throw new Error("Failed to fetch items");
->>>>>>> 1456f4e (Updated cors for the render)
       const data = await res.json();
 
       // Sort by urgencyScore descending

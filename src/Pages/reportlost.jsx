@@ -44,11 +44,7 @@ const ReportLost = () => {
     uploadFormData.append("type", "lost");
 
     try {
-<<<<<<< HEAD
-      await axios.post("https://intern-project-1-fose.onrender.com/api/uploadLostReport", uploadFormData, {
-=======
       await axios.post(`${BACKEND_URL}/api/uploadLostReport`, uploadFormData, {
->>>>>>> 1456f4e (Updated cors for the render)
         headers: {
           "Content-Type": "multipart/form-data",
           Authorization: `Bearer ${token}`,
