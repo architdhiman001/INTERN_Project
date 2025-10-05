@@ -23,7 +23,7 @@ const Lostitems = () => {
   ];
   const [items, setitems] = useState([]);
   const getitems = async () => {
-    let req = await fetch("http://localhost:5050/api/lostitems");
+    let req = await fetch("https://intern-project-1-fose.onrender.com/api/lostitems");
     let item = await req.json();
     setitems(item);
     console.log(item);
