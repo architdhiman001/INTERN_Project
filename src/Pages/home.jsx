@@ -10,7 +10,7 @@ const Home = () => {
 
   const getItems = async () => {
     try {
-      const res = await fetch("http://localhost:5050/api/allitems");
+      const res = await fetch("https://intern-project-1-fose.onrender.com/api/allitems");
       const data = await res.json();
 
       // Sort by urgencyScore descending
