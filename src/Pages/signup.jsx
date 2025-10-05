@@ -15,7 +15,7 @@ const Signup = () => {
     setMessage("");
 
     try {
-      const res = await fetch("http://localhost:5050/api/auth/signup", {
+      const res = await fetch("https://intern-project-1-fose.onrender.com/api/auth/signup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
