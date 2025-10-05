@@ -8,7 +8,7 @@ const MyItems = () => {
 
   const fetchMyItems = async () => {
     try {
-      const res = await axios.get("http://localhost:5050/api/myitems", {
+      const res = await axios.get("https://intern-project-1-fose.onrender.com/api/myitems", {
         headers: { Authorization: `Bearer ${token}` },
       });
       setMyItems(res.data);
@@ -22,7 +22,7 @@ const MyItems = () => {
     if (!confirmDelete) return;
 
     try {
-      await axios.delete(`http://localhost:5050/api/item/${id}`, {
+      await axios.delete(`https://intern-project-1-fose.onrender.com/api/item/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setMyItems(myItems.filter((item) => item._id !== id));
