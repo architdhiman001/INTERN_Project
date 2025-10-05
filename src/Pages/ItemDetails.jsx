@@ -9,7 +9,7 @@ const ItemDetails = () => {
   useEffect(() => {
     const fetchItem = async () => {
       try {
-        const res = await fetch(`http://localhost:5050/api/item/${id}`);
+        const res = await fetch(`https://intern-project-1-fose.onrender.com/api/item/${id}`);
         const data = await res.json();
         setItem(data);
       } catch (error) {
