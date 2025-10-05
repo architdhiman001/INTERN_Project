@@ -45,7 +45,7 @@ const ReportFound = () => {
     uploadFormData.append("type", "found");
 
     try {
-      await axios.post("http://localhost:5050/api/uploadFoundReport", uploadFormData, {
+      await axios.post("https://intern-project-1-fose.onrender.com/api/uploadFoundReport", uploadFormData, {
         headers: {
           "Content-Type": "multipart/form-data",
           Authorization: `Bearer ${token}`, // ✅ Attach token for user tracking
